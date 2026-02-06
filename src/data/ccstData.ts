@@ -223,6 +223,21 @@ export const passingTips = [
   "LOTO procedure order: notify → shut down → isolate → lock/tag → verify zero energy → work.",
   "Orifice plate orientation: bevel faces downstream, handle/tab points upstream. Drain hole at bottom for gas.",
   "Control loop modes: Manual, Auto, Cascade, Remote. Know when each is used and how to transfer between them.",
+  "Bernoulli's principle: fluid velocity increases → pressure decreases. Basis for DP flow measurement.",
+  "Know the 3 types of orifice plate taps: flange taps (most common), corner taps, and D-D/2 taps.",
+  "Understand bubbler/dip tube level measurement: constant air flow, measures back-pressure = level.",
+  "Capacitance level probes: measure dielectric change. Good for interface detection in two liquids.",
+  "Nuclear/radiometric level: gamma source + detector. Non-contact through vessel walls. Licensed source.",
+  "Understand PLC scan cycle: Input scan → Program execution → Output scan → Housekeeping. Typical 10-50ms.",
+  "DCS vs SCADA: DCS = continuous control, plant-wide. SCADA = remote monitoring, wide geographic area.",
+  "Know common failure modes: fail-open, fail-closed, fail-last, fail-safe. Choose based on process risk.",
+  "Understand the difference between accuracy, precision, repeatability, and reproducibility.",
+  "Rangeability = URV/LRV. Turndown ratio = max measurable / min measurable. Higher = more flexible.",
+  "For analytical instruments: know pH, conductivity, turbidity, dissolved O₂ calibration procedures.",
+  "Understand loop diagrams vs P&IDs: loop diagrams show wiring detail, P&IDs show process connections.",
+  "Cable types: twisted pair (signal), coax (high freq), fiber optic (long distance, no EMI). Know when to use each.",
+  "Pressure element types: Bourdon tube (C, spiral, helical), bellows, diaphragm. Know applications.",
+  "Understand warm-up time requirements for analytical instruments (pH: 15-30 min, analyzers: 1-4 hrs).",
 ];
 
 export const quickReference = {
@@ -276,3 +291,216 @@ export const quickReference = {
     { term: "Extension Wire", definition: "Same alloy as TC. For extending TC to junction box. Must match type." },
   ],
 };
+
+export const troubleshootingGuides = [
+  {
+    category: "4-20 mA Loop Problems",
+    icon: "🔌",
+    scenarios: [
+      { symptom: "Reading 0 mA (no signal)", cause: "Open circuit — broken wire, loose terminal, blown fuse", fix: "Check continuity with multimeter. Inspect terminals, junction boxes, fuses." },
+      { symptom: "Reading < 4 mA", cause: "Partial open, high resistance connection, or transmitter fault", fix: "Measure mA at transmitter output. Check for corroded terminals, water ingress." },
+      { symptom: "Reading stuck at 4 mA", cause: "Transmitter in fault mode, or input below LRV", fix: "Check PV at transmitter. Verify range (LRV/URV). Check for blocked impulse lines." },
+      { symptom: "Reading stuck at 20 mA", cause: "Input above URV, or transmitter saturation", fix: "Verify process value. Check for overpressure. Recalibrate if needed." },
+      { symptom: "Reading > 20 mA", cause: "Short circuit or transmitter failure", fix: "Disconnect load. Measure transmitter output directly. Replace if faulty." },
+      { symptom: "Erratic/noisy signal", cause: "EMI, ground loop, loose connection, or bad shielding", fix: "Check shield grounding (one end only). Separate signal cables from power. Tighten connections." },
+      { symptom: "Slow response", cause: "Damping too high, blocked impulse line, or sensor degradation", fix: "Reduce damping setting. Clean/blow down impulse lines. Check sensor condition." },
+    ],
+  },
+  {
+    category: "Control Valve Issues",
+    icon: "🔩",
+    scenarios: [
+      { symptom: "Valve doesn't move", cause: "No air supply, failed I/P converter, or mechanical seizure", fix: "Check air supply pressure (typically 20 PSI). Test I/P output. Check for packing too tight." },
+      { symptom: "Valve oscillates/hunts", cause: "Oversized valve, positioner gain too high, or friction", fix: "Check Cv sizing. Reduce positioner gain. Lubricate or repack valve." },
+      { symptom: "Valve sticks (stiction)", cause: "Packing too tight, corrosion, process buildup", fix: "Adjust packing torque. Clean valve trim. Consider PTFE packing." },
+      { symptom: "Valve leaks through", cause: "Damaged seat/plug, erosion, or cavitation damage", fix: "Inspect seat and plug. Replace trim. Check for cavitation (noise, vibration)." },
+      { symptom: "Slow stroking time", cause: "Low air supply, tubing restriction, or volume booster needed", fix: "Check air supply. Inspect tubing for kinks. Add volume booster for large actuators." },
+      { symptom: "Positioner won't calibrate", cause: "Feedback linkage broken, I/P failure, or board fault", fix: "Check feedback arm connection. Verify I/P output. Auto-calibrate or replace." },
+    ],
+  },
+  {
+    category: "Temperature Measurement",
+    icon: "🌡️",
+    scenarios: [
+      { symptom: "TC reads ambient temp", cause: "Open TC circuit — broken wire or bad connection", fix: "Check continuity. TC open circuit defaults to CJC (ambient) temperature." },
+      { symptom: "TC reads too high", cause: "Wrong TC type configured, or reversed polarity", fix: "Verify TC type matches transmitter config. Check wire color codes and polarity." },
+      { symptom: "TC reads erratic", cause: "Intermittent connection, EMI, or moisture in junction", fix: "Inspect connections. Check for water in thermowell. Re-route away from motors/VFDs." },
+      { symptom: "RTD reads too high", cause: "Lead wire resistance (2-wire), or partial short", fix: "Upgrade to 3-wire or 4-wire. Measure lead resistance. Check insulation." },
+      { symptom: "RTD reads 0 or negative", cause: "Short circuit in RTD element", fix: "Measure resistance at RTD. Should be ~100Ω at 0°C (Pt100). Replace if shorted." },
+      { symptom: "Slow response time", cause: "Thermowell too thick, air gap, or wrong insertion depth", fix: "Use thermal compound in thermowell. Verify insertion depth (min 10× element diameter)." },
+    ],
+  },
+  {
+    category: "Pressure Transmitter",
+    icon: "📊",
+    scenarios: [
+      { symptom: "Reading always zero", cause: "Blocked impulse line, closed isolation valve, or failed sensor", fix: "Check isolation valves open. Blow down impulse lines. Verify at transmitter." },
+      { symptom: "Reading drifts slowly", cause: "Seal leak, diaphragm creep, or temperature effect", fix: "Check for fill fluid leaks. Verify zero at atmospheric. Apply temperature compensation." },
+      { symptom: "DP reads wrong level", cause: "Wrong SG, reference leg problem, or incorrect suppression", fix: "Verify specific gravity. Check wet/dry leg condition. Recalculate suppression/elevation." },
+      { symptom: "Reading fluctuates with process", cause: "Pulsation from pump, inadequate snubber, or line vibration", fix: "Add pulsation dampener/snubber. Use longer impulse lines. Add dampening in transmitter." },
+    ],
+  },
+  {
+    category: "Communication Failures",
+    icon: "📡",
+    scenarios: [
+      { symptom: "HART no communication", cause: "No 250Ω resistor, wrong polarity, or device address conflict", fix: "Verify 250Ω load resistor in loop. Check HART device address (0 for point-to-point). Check polarity." },
+      { symptom: "Fieldbus segment down", cause: "Terminator missing, wrong polarity, or trunk cable fault", fix: "Verify terminators at both ends. Check polarity on all devices. Test cable with segment checker." },
+      { symptom: "Modbus timeout errors", cause: "Wrong baud rate, parity mismatch, or address conflict", fix: "Verify all devices match: baud rate, parity, stop bits. Check for duplicate addresses." },
+      { symptom: "Wireless signal drops", cause: "Interference, obstruction, or low battery", fix: "Check signal strength. Remove obstructions. Replace batteries. Add repeater if needed." },
+    ],
+  },
+];
+
+export const toolsReference = [
+  {
+    category: "Calibration Tools",
+    tools: [
+      { name: "Deadweight Tester", use: "Primary pressure standard. Precise piston-cylinder. Accuracy: ±0.015% to ±0.1%." },
+      { name: "Pressure Hand Pump", use: "Generates pneumatic/hydraulic pressure for field calibration. Not a standard." },
+      { name: "Decade Resistance Box", use: "Simulates RTD resistance values for calibration. 0.01Ω resolution typical." },
+      { name: "mA Calibrator (Fluke 787)", use: "Sources, simulates, and measures 4-20mA. Also measures voltage and resistance." },
+      { name: "TC/RTD Simulator", use: "Generates precise mV (TC) or Ω (RTD) values for transmitter calibration." },
+      { name: "HART Communicator", use: "Configures smart transmitters. Read PV, set range, trim, loop test, diagnostics." },
+      { name: "Documenting Calibrator", use: "Records As-Found/As-Left data automatically. Traceability to NIST." },
+    ],
+  },
+  {
+    category: "Troubleshooting Tools",
+    tools: [
+      { name: "Digital Multimeter", use: "Measure V, I, Ω. For 4-20mA: measure across 250Ω resistor or use mA clamp." },
+      { name: "Clamp-on mA Meter", use: "Measures loop current without breaking the circuit. Non-intrusive." },
+      { name: "Loop Calibrator", use: "Sources and measures 4-20mA simultaneously. Can power 2-wire transmitters." },
+      { name: "Megohmmeter (Megger)", use: "Tests cable insulation resistance. Apply 250V/500V/1000V. Good > 1MΩ." },
+      { name: "Oscilloscope", use: "View signal waveform. Diagnose noise, frequency issues. Essential for fieldbus." },
+      { name: "Vibration Analyzer", use: "Measures bearing condition, imbalance, misalignment on rotating equipment." },
+      { name: "Infrared Thermometer", use: "Non-contact temperature. Check for hot spots, verify process temp externally." },
+      { name: "Thermal Imaging Camera", use: "Detect heat patterns. Find loose connections, overloaded circuits, insulation failures." },
+    ],
+  },
+  {
+    category: "Installation Tools",
+    tools: [
+      { name: "Tubing Bender", use: "Bend SS or copper tubing without kinking. Min bend radius = 3× tube OD." },
+      { name: "Tube Cutter", use: "Clean square cut on instrument tubing. Deburr after cutting." },
+      { name: "Torque Wrench", use: "Proper fitting tightening. Over-torque = leak or crack. Under-torque = leak." },
+      { name: "Swaging Tool", use: "For compression fittings (Swagelok). Proper gap inspection after swaging." },
+      { name: "Cable Tester", use: "Verify cable continuity, shorts, crosses. TDR for locating cable faults." },
+      { name: "Level/Plumb/Square", use: "Proper instrument mounting orientation. Critical for DP transmitters." },
+    ],
+  },
+];
+
+export const examTraps = [
+  { trap: "Confusing ATO with ATC", explanation: "ATO (Air-to-Open) = Fail-CLOSED. ATC (Air-to-Close) = Fail-OPEN. Think: what happens when air FAILS — that's the fail position." },
+  { trap: "Mixing up Direct/Reverse acting controller", explanation: "Direct: output ↑ when PV ↑ (cooling). Reverse: output ↓ when PV ↑ (heating). Think: does the valve need to OPEN or CLOSE when temperature rises?" },
+  { trap: "RTD lead wire error", explanation: "2-wire RTD adds lead resistance to reading (reads HIGH). 3-wire compensates. 4-wire eliminates. Exam loves asking which reads higher." },
+  { trap: "Square root extraction for DP flow", explanation: "DP is proportional to flow SQUARED. Must extract square root. If DP doubles, flow increases by √2 (1.414×), NOT 2×." },
+  { trap: "Gauge vs Absolute pressure", explanation: "Gauge = relative to atmosphere. Absolute = gauge + atmospheric (14.7 PSI). Vacuum is negative gauge but positive absolute." },
+  { trap: "TC cold junction compensation", explanation: "CJC compensates for the reference junction temperature. Without CJC, reading will be LOW by the ambient temperature amount. RTDs don't need CJC." },
+  { trap: "ISA first letter vs subsequent", explanation: "First letter = measured variable (F=Flow). Subsequent = function (I=Indicate, C=Control). FIC = Flow Indicating Controller, NOT 'First Instrument Controller'." },
+  { trap: "Zener barrier vs Galvanic isolator", explanation: "Zener: simpler, cheaper, requires IS ground. Galvanic: no IS ground needed, provides isolation, better for HART. Exam asks about grounding requirement." },
+  { trap: "Division 1 vs Division 2 equipment", explanation: "Div 1 equipment CAN be used in Div 2. Div 2 equipment CANNOT be used in Div 1. More stringent rating always works in less stringent area." },
+  { trap: "Proportional band vs Gain", explanation: "PB% = 100/Gain. Wide PB = low gain = less aggressive. Narrow PB = high gain = more aggressive. 200% PB = Gain of 0.5." },
+  { trap: "Integral windup", explanation: "When output saturates (0% or 100%) but error persists, integral accumulates endlessly. Anti-windup resets integral when output is saturated." },
+  { trap: "Valve Cv at partial open", explanation: "Cv rating is at 100% open. At 50% stem travel: Equal% valve ≈ 10-15% of max Cv, Linear valve ≈ 50% of max Cv." },
+  { trap: "Sensor trim vs Output trim", explanation: "Sensor trim: adjusts to actual process input (needs reference standard). Output trim: adjusts mA output only (needs mA meter). Different purposes!" },
+  { trap: "HART multidrop mode", explanation: "In multidrop (address 1-15), 4-20mA analog signal is DISABLED (fixed at 4mA). Communication is digital only. Point-to-point = address 0." },
+  { trap: "Hydrostatic test pressure", explanation: "Typically 1.5× design pressure. NEVER test with compressed gas (stored energy = explosion risk). Use water (incompressible)." },
+];
+
+export const commonScenarios = [
+  {
+    category: "Calibration Scenarios",
+    icon: "🔧",
+    scenarios: [
+      {
+        question: "A pressure transmitter reads 12.8 mA. Range is 0-200 PSI. What is the PV?",
+        answer: "PV = ((12.8 - 4) / 16) × 200 + 0 = (8.8/16) × 200 = 0.55 × 200 = 110 PSI",
+        concept: "PV from mA formula"
+      },
+      {
+        question: "During 5-point cal, As-Found at 50% shows 11.85 mA instead of 12.0 mA. Error?",
+        answer: "Error = (11.85 - 12.0) / 16 × 100 = -0.15/16 × 100 = -0.9375% of span",
+        concept: "% error calculation"
+      },
+      {
+        question: "RTD reads 138.5Ω. What temperature? (Pt100, α=0.00385)",
+        answer: "R = R₀(1 + αΔT) → 138.5 = 100(1 + 0.00385×T) → T = (0.385)/0.00385 = 100°C",
+        concept: "RTD resistance to temperature"
+      },
+      {
+        question: "Flow transmitter with 0-100 GPM range. DP = 25% of max. What is flow?",
+        answer: "Flow = √(0.25) × 100 = 0.5 × 100 = 50 GPM (square root relationship)",
+        concept: "DP to flow conversion"
+      },
+      {
+        question: "A thermocouple reads 15.2 mV. Ambient is 25°C (0.5 mV). What is the actual mV?",
+        answer: "Actual mV = measured + CJC = 15.2 + 0.5 = 15.7 mV (then convert via TC table)",
+        concept: "Cold junction compensation"
+      },
+    ],
+  },
+  {
+    category: "Troubleshooting Scenarios",
+    icon: "🛠️",
+    scenarios: [
+      {
+        question: "Operator reports level reading 100% but tank is half full. DP transmitter with wet leg.",
+        answer: "Wet leg may have lost fill fluid, reducing reference pressure. Low reference = high reading. Refill wet leg and recalibrate.",
+        concept: "Wet leg reference problem"
+      },
+      {
+        question: "Control valve oscillates between 40-60% when controller output is steady at 50%.",
+        answer: "Likely positioner issue: gain too high, or excessive friction causing stick-slip. Reduce positioner gain or repack valve.",
+        concept: "Valve oscillation diagnosis"
+      },
+      {
+        question: "4-20 mA signal at transmitter shows 16 mA but DCS reads 15.2 mA.",
+        answer: "Voltage drop across corroded connection. Measure voltage at each junction point. Clean and tighten terminals.",
+        concept: "Signal loss in loop wiring"
+      },
+      {
+        question: "pH reading is unstable and drifts. Last calibration was 6 months ago.",
+        answer: "pH glass electrode has limited life (1-2 years). Reference junction may be fouled. Clean electrode, recalibrate with fresh buffers, replace if needed.",
+        concept: "Analytical instrument maintenance"
+      },
+    ],
+  },
+  {
+    category: "Safety & Installation Scenarios",
+    icon: "⚠️",
+    scenarios: [
+      {
+        question: "You need to install a transmitter in a Class I, Div 1 area. What protection methods?",
+        answer: "Explosion-proof (XP) housing, or intrinsic safety (IS) with proper barriers. IS preferred for low power instruments. XP for higher power.",
+        concept: "Hazardous area protection"
+      },
+      {
+        question: "SIS proof test reveals 1 of 2 sensors failed (1oo2 configuration). What action?",
+        answer: "Repair/replace failed sensor ASAP. System still functional (1 good sensor). Document failure. Calculate impact on PFD. Review proof test interval.",
+        concept: "SIS maintenance"
+      },
+      {
+        question: "During commissioning, a control valve with air-to-open action needs to fail closed on air loss.",
+        answer: "ATO is correct — on air failure, spring returns valve to closed position. Verify by disconnecting air supply and confirming valve closes fully.",
+        concept: "Fail-safe verification"
+      },
+    ],
+  },
+];
+
+export const mnemonics = [
+  { mnemonic: "\"LIVE ZERO\"", meaning: "4 mA = 0% signal. If you read 0 mA, something is WRONG (broken wire). This is why 4-20mA uses a live zero." },
+  { mnemonic: "\"ATO = FClose\"", meaning: "Air-To-Open = Fail-Closed. When you lose air, the spring CLOSES the valve. Air pushes it open." },
+  { mnemonic: "\"PID = Present-Integral-Derivative\"", meaning: "P = present error, I = past error (integral/sum), D = future error (rate of change/prediction)." },
+  { mnemonic: "\"1.6 mA = 10%\"", meaning: "Quick conversion: every 1.6 mA step = 10% of span. 4→5.6→7.2→8.8→10.4→12→13.6→15.2→16.8→18.4→20 mA." },
+  { mnemonic: "\"KFC\" for TC wire colors", meaning: "K=Yellow, F(J)=Black(white), C(T)=Blue. Or remember: K=Ketchup&Mustard (red/yellow)." },
+  { mnemonic: "\"SIL = Safety Integrity Level\"", meaning: "SIL 1=10×, SIL 2=100×, SIL 3=1000× risk reduction. Each level is 10× better. Think powers of 10." },
+  { mnemonic: "\"LOTO = Life Over Task Omission\"", meaning: "Lock Out Tag Out saves lives. Steps: Notify→Shutdown→Isolate→Lock/Tag→Verify→Work." },
+  { mnemonic: "\"3 H's of valve problems\"", meaning: "Hysteresis (direction-dependent), Hunting (oscillation), and Hard-to-move (stiction). The 3 most common valve issues." },
+  { mnemonic: "\"SMART = Sensor, Memory, And Remote Transmitter\"", meaning: "Smart transmitters have microprocessor, memory, and digital communication capability." },
+  { mnemonic: "\"URV > LRV, always\"", meaning: "Upper Range Value is always larger than Lower Range Value. Span = URV - LRV. Simple but often confused." },
+  { mnemonic: "\"250Ω for HART\"", meaning: "HART requires 250Ω minimum load resistance for communication. Usually at the DCS/PLC end of the loop." },
+  { mnemonic: "\"Shield = ONE end only\"", meaning: "Ground cable shield at control room end ONLY. Both ends grounded = ground loop = noise." },
+];
