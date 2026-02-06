@@ -170,6 +170,36 @@ const Index = () => {
               color="accent"
               index={5}
             />
+            <CheatSheetCard
+              title="📏 Measurement Types"
+              items={cheatSheets.measurement}
+              color="primary"
+              index={6}
+            />
+            <CheatSheetCard
+              title="🛡️ Safety Systems (SIS/SIL)"
+              items={cheatSheets.safetyystems}
+              color="secondary"
+              index={7}
+            />
+            <CheatSheetCard
+              title="📝 ISA-5.1 Symbols & Tags"
+              items={quickReference.isaSymbols}
+              color="accent"
+              index={8}
+            />
+            <CheatSheetCard
+              title="🔤 Common Acronyms"
+              items={quickReference.commonAcronyms}
+              color="primary"
+              index={9}
+            />
+            <CheatSheetCard
+              title="🔌 Wiring & Connections"
+              items={quickReference.wiring}
+              color="secondary"
+              index={10}
+            />
           </div>
         )}
 
